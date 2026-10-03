@@ -3,6 +3,7 @@ import SectionHeading from '../components/SectionHeading'
 import { Link } from 'react-router-dom'
 import EventCard from '../components/EventCard'
 import ParticleField from '../components/ParticleField'
+import TechSketch from '../components/TechSketch'
 
 const domains = [
     'Web Development',
@@ -87,8 +88,9 @@ export default function Home() {
                                 something real.
                             </p>
 
-                            <Link
-                                href="#explore"
+                            <a
+                                href="#explore">
+                                    <p
                                 className="group flex w-fit items-center gap-3 border border-white/30 px-6 py-4 text-sm font-semibold uppercase tracking-wider transition hover:border-orange-500 hover:bg-orange-500"
                             >
                                 Explore ATS
@@ -96,7 +98,8 @@ export default function Home() {
                                     size={18}
                                     className="transition-transform group-hover:translate-x-1 group-hover:translate-y-1"
                                 />
-                            </Link>
+                                </p>
+                            </a>
                         </div>
                     </div>
 
@@ -109,6 +112,9 @@ export default function Home() {
                 {/* Decorative elements */}
                 <div className="pointer-events-none absolute right-[8%] top-[28%] hidden h-40 w-40 rounded-full border border-orange-500/30 lg:block" />
                 <div className="pointer-events-none absolute right-[11%] top-[32%] hidden h-24 w-24 rounded-full border border-orange-500/50 lg:block" />
+                <div className="hidden justify-self-end lg:block absolute right-[13%] top-[17%]">
+                    <TechSketch />
+                </div>
             </section>
 
             {/* INTRO */}
@@ -149,34 +155,137 @@ export default function Home() {
             </section>
 
             {/* DOMAINS */}
-            <section className="bg-white px-5 py-20 md:px-10 md:py-28">
-                <div className="mx-auto max-w-360">
-                    <SectionHeading
-                        eyebrow="02 / What we explore"
-                        title="One society. Many directions."
-                        description="Explore the technologies shaping the way we build, communicate and solve problems."
-                    />
+            {/* TECHNICAL DOMAINS */}
+            <section
+                id="explore"
+                className="bg-white px-5 py-24 md:px-10 md:py-32 lg:px-16"
+            >
+                <div className="mx-auto max-w-[1440px]">
 
-                    <div className="mt-16 border-t border-black">
-                        {domains.map((domain, index) => (
-                            <div
-                                key={domain}
-                                className="group flex items-center justify-between border-b border-black/15 py-6 transition hover:bg-black hover:px-5 hover:text-white md:py-8"
+                    {/* HEADER */}
+                    <div className="mb-16 flex flex-col justify-between gap-8 border-b-2 border-black pb-8 md:flex-row md:items-end">
+
+                        <div>
+                            <p className="mb-4 text-xs font-bold uppercase tracking-[0.25em] text-orange-600">
+                                02 / Technical Domains
+                            </p>
+
+                            <h2 className="max-w-4xl text-5xl font-black uppercase leading-[0.85] tracking-[-0.04em] md:text-7xl lg:text-8xl">
+                                Learn.
+                                <br />
+                                Build.
+                                <br />
+                                Experiment.
+                            </h2>
+                        </div>
+
+                        <p className="max-w-sm text-sm leading-6 text-neutral-600">
+                            Explore the technologies, disciplines and ideas that
+                            shape what we build at ATS.
+                        </p>
+
+                    </div>
+
+                    {/* DOMAIN LIST */}
+                    <div className="border-l border-t border-black">
+
+                        {[
+                            {
+                                number: '01',
+                                title: 'Web Development',
+                                description:
+                                    'Frontend, backend and full-stack experiences for the modern web.',
+                                tags: ['React', 'Node.js', 'MongoDB'],
+                            },
+                            {
+                                number: '02',
+                                title: 'Artificial Intelligence',
+                                description:
+                                    'Explore intelligent systems, generative AI and practical AI applications.',
+                                tags: ['Python', 'LLMs', 'APIs'],
+                            },
+                            {
+                                number: '03',
+                                title: 'Machine Learning',
+                                description:
+                                    'Learn how data becomes predictions, models and useful products.',
+                                tags: ['Python', 'TensorFlow', 'NLP'],
+                            },
+                            {
+                                number: '04',
+                                title: 'App Development',
+                                description:
+                                    'Design and build applications for mobile platforms and beyond.',
+                                tags: ['React Native', 'Firebase', 'APIs'],
+                            },
+                            {
+                                number: '05',
+                                title: 'Cyber Security',
+                                description:
+                                    'Understand systems, networks and the fundamentals of secure computing.',
+                                tags: ['Networks', 'Linux', 'Security'],
+                            },
+                            {
+                                number: '06',
+                                title: 'Cloud Computing',
+                                description:
+                                    'Deploy, scale and manage applications using modern cloud infrastructure.',
+                                tags: ['AWS', 'Docker', 'Cloud'],
+                            },
+                        ].map((domain) => (
+                            <article
+                                key={domain.number}
+                                className="group relative border-b border-r border-black bg-white transition-colors duration-300 hover:bg-[#d9ccff]"
                             >
-                                <div className="flex items-center gap-6">
-                                    <span className="font-mono text-xs text-orange-600">
-                                        0{index + 1}
-                                    </span>
+                                <div className="grid gap-8 p-6 md:grid-cols-[90px_1fr_280px] md:p-10">
 
-                                    <h3 className="text-2xl font-bold tracking-tight md:text-4xl">
-                                        {domain}
-                                    </h3>
+                                    {/* NUMBER */}
+                                    <div className="flex items-start justify-between md:block">
+                                        <span className="font-mono text-xs font-bold">
+                                            {domain.number}
+                                        </span>
+
+                                        <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-neutral-400 md:mt-4 md:block">
+                                            DOMAIN
+                                        </span>
+                                    </div>
+
+                                    {/* MAIN */}
+                                    <div>
+                                        <h3 className="text-3xl font-black uppercase leading-[0.9] tracking-tight transition-transform duration-300 group-hover:translate-x-2 md:text-5xl">
+                                            {domain.title}
+                                        </h3>
+
+                                        <p className="mt-5 max-w-xl text-sm leading-6 text-neutral-600">
+                                            {domain.description}
+                                        </p>
+                                    </div>
+
+                                    {/* TAGS */}
+                                    <div className="flex flex-wrap content-start gap-2 md:justify-end">
+                                        {domain.tags.map((tag) => (
+                                            <span
+                                                key={tag}
+                                                className="border border-black bg-white px-3 py-2 font-mono text-[9px] uppercase tracking-wider transition-colors duration-300 group-hover:bg-orange-500"
+                                            >
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
+
                                 </div>
 
-                                <ArrowUpRight className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-                            </div>
+                                {/* HOVER MARK */}
+                                <div className="absolute bottom-5 right-5 flex h-8 w-8 items-center justify-center border border-black opacity-0 transition-all duration-300 group-hover:opacity-100">
+                                    <span className="text-lg leading-none">
+                                        ↗
+                                    </span>
+                                </div>
+                            </article>
                         ))}
+
                     </div>
+
                 </div>
             </section>
 
