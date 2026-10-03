@@ -1,5 +1,6 @@
 import { ArrowUpRight, CalendarDays, MapPin, Users } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import ParticleField from '../components/ParticleField'
 
 const upcomingEvents = [
     {
@@ -92,6 +93,7 @@ export default function Events() {
 
             {/* HERO */}
             <section className="bg-black px-5 py-24 text-white md:px-10 md:py-32 lg:px-16">
+                <ParticleField count={40} />
                 <div className="mx-auto max-w-[1440px]">
 
                     <div className="mb-16 flex items-center justify-between border-b border-white/20 pb-4">

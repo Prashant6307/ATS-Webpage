@@ -2,6 +2,7 @@
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import SectionHeading from '../components/SectionHeading'
+import ParticleField from '../components/ParticleField'
 
 const domains = [
   {
@@ -65,6 +66,7 @@ export default function About() {
 
       {/* HERO */}
       <section className="bg-black px-5 py-24 text-white md:px-10 md:py-32">
+        <ParticleField count={35} />
         <div className="mx-auto max-w-[1440px]">
 
           <div className="mb-16 flex items-center justify-between border-b border-white/20 pb-4">
@@ -292,13 +294,13 @@ export default function About() {
             <Link
               to="/contact">
               <p
-              className="group flex w-fit items-center gap-3 bg-black px-7 py-4 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-white hover:text-black"
-                          >
-              Join ATS
-              <ArrowUpRight
-                size={18}
-                className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
-              />
+                className="group flex w-fit items-center gap-3 bg-black px-7 py-4 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-white hover:text-black"
+              >
+                Join ATS
+                <ArrowUpRight
+                  size={18}
+                  className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
+                />
               </p>
             </Link>
 

@@ -2,6 +2,7 @@ import { ArrowDownRight, ArrowUpRight, Plus } from 'lucide-react'
 import SectionHeading from '../components/SectionHeading'
 import { Link } from 'react-router-dom'
 import EventCard from '../components/EventCard'
+import ParticleField from '../components/ParticleField'
 
 const domains = [
     'Web Development',
@@ -44,6 +45,17 @@ export default function Home() {
         <main className="overflow-hidden bg-[#f5f3ee]">
             {/* HERO */}
             <section className="relative min-h-[calc(100vh-81px)] bg-black text-white">
+                <ParticleField count={45} />
+                <div
+                    className="pointer-events-none absolute inset-0 opacity-[0.08]"
+                    style={{
+                        backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)
+        `,
+                        backgroundSize: '80px 80px',
+                    }}
+                />
                 <div className="mx-auto flex min-h-[calc(100vh-81px)] max-w-360 flex-col justify-between px-5 py-10 md:px-10 md:py-14">
                     <div className="flex items-center justify-between">
                         <p className="text-[10px] uppercase tracking-[0.3em] text-neutral-400">
