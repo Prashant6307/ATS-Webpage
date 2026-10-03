@@ -1,4 +1,4 @@
-
+import SEO from '../components/SEO'
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import SectionHeading from '../components/SectionHeading'
@@ -62,6 +62,11 @@ const values = [
 
 export default function About() {
   return (
+    <>
+    <SEO
+    title="About"
+    description="Learn about Amity Tech Society, our mission, technical domains, values, and student community."
+/>
     <main className="overflow-hidden bg-[#f5f3ee]">
 
       {/* HERO */}
@@ -309,5 +314,6 @@ export default function About() {
       </section>
 
     </main>
+    </>
   )
 }

@@ -6,8 +6,10 @@ const links = [
     { name: 'About', path: '/about' },
     { name: 'Events', path: '/events' },
     { name: 'Projects', path: '/projects' },
+    { name: 'Achievements', path: '/achievements' },
     { name: 'Team', path: '/team' },
     { name: 'Resources', path: '/resources' },
+    { name: 'Gallery', path: '/gallery' },
 ]
 
 export default function Navbar() {
@@ -103,7 +105,7 @@ export default function Navbar() {
             {/* MOBILE MENU */}
             <div
                 className={`absolute left-0 top-full w-full overflow-hidden border-t border-black/10 bg-[#f5f3ee] transition-all duration-300 lg:hidden ${open
-                    ? 'visible max-h-[500px] opacity-100'
+                    ? 'visible max-h-[550px] opacity-100'
                     : 'invisible max-h-0 opacity-0'
                     }`}
             >

@@ -11,6 +11,9 @@ import Projects from './pages/Projects'
 import Team from './pages/Team'
 import Resources from './pages/Resources'
 import Contact from './pages/Contact'
+import Achievements from './pages/Achievements'
+import Gallery from './pages/Gallery'
+import NotFound from './pages/NotFound'
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -35,6 +38,11 @@ function AnimatedRoutes() {
           <Route path="/team" element={<Team />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/achievements" element={<Achievements />} />
+          <Route path="/gallery" element={<Gallery />} />
+
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>
     </AnimatePresence>
