@@ -217,7 +217,8 @@ export default function Navbar() {
                         </div>
                     ) : (
                         <Link
-                            to="/login"
+                            to="/login">
+                                <p
                             className="group flex items-center gap-2 border border-black/20 px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.14em] transition-all duration-300 hover:bg-black hover:text-white"
                         >
                             Login
@@ -225,6 +226,7 @@ export default function Navbar() {
                                 size={14}
                                 className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
                             />
+                            </p>
                         </Link>
                     )}
 
@@ -367,15 +369,19 @@ export default function Navbar() {
                         <Link
                             to="/login"
                             onClick={closeMenu}
-                            className="group mt-6 flex items-center justify-between border border-black px-5 py-4 text-xs font-bold uppercase tracking-[0.15em] text-black transition-all duration-300 hover:bg-black hover:text-white"
                         >
-                            <span>Login</span>
+                            <p
+                                className="group mt-6 flex items-center justify-between border border-black px-5 py-4 text-xs font-bold uppercase tracking-[0.15em] text-black transition-all duration-300 "
+                            >
+                                <span>Login</span>
 
-                            <ArrowUpRight
-                                size={17}
-                                className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-                            />
+                                <ArrowUpRight
+                                    size={17}
+                                    className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                                />
+                            </p>
                         </Link>
+
                     )}
 
                     {/* JOIN BUTTON */}
@@ -395,6 +401,6 @@ export default function Navbar() {
                     </Link>
                 </div>
             </div>
-        </header>
+        </header >
     )
 }
