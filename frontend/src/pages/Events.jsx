@@ -1,73 +1,23 @@
-import { ArrowUpRight, CalendarDays, MapPin, Users } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import {
+    ArrowUpRight,
+    CalendarDays,
+    MapPin,
+    Users,
+} from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+
 import ParticleField from '../components/ParticleField'
 import SEO from '../components/SEO'
 
-const upcomingEvents = [
-    {
-        number: '01',
-        type: 'WORKSHOP',
-        title: 'Web Development Workshop',
-        date: '15 OCT 2026',
-        time: '10:00 AM — 1:00 PM',
-        venue: 'Amity University, Lucknow',
-        description:
-            'Learn the fundamentals of modern web development and build your first responsive web experience with the ATS community.',
-        seats: '100 SEATS',
-        featured: true,
-    },
-    {
-        number: '02',
-        type: 'HACKATHON',
-        title: 'ATS Buildathon',
-        date: '05 NOV 2026',
-        time: '48 HOURS',
-        venue: 'ATS Innovation Lab',
-        description:
-            'Bring an idea, form a team and build a working solution to a real-world problem.',
-        seats: 'TEAM EVENT',
-        featured: false,
-    },
-    {
-        number: '03',
-        type: 'COMPETITION',
-        title: 'Code Arena',
-        date: '20 NOV 2026',
-        time: '2:00 PM — 5:00 PM',
-        venue: 'Computer Science Lab',
-        description:
-            'Test your problem-solving skills through a series of programming challenges.',
-        seats: 'LIMITED SEATS',
-        featured: false,
-    },
-]
+import { getEvents } from '../api/event'
+import {
+    registerForEvent,
+    getMyRegistrations,
+    cancelEventRegistration,
+} from '../api/registrations'
 
-const pastEvents = [
-    {
-        number: '01',
-        title: 'Tech Orientation',
-        date: 'SEP 2026',
-        type: 'COMMUNITY',
-    },
-    {
-        number: '02',
-        title: 'Git & GitHub Session',
-        date: 'AUG 2026',
-        type: 'WORKSHOP',
-    },
-    {
-        number: '03',
-        title: 'Introduction to AI',
-        date: 'AUG 2026',
-        type: 'SEMINAR',
-    },
-    {
-        number: '04',
-        title: 'Freshers Tech Meetup',
-        date: 'JUL 2026',
-        type: 'MEETUP',
-    },
-]
+import { useAuth } from '../context/AuthContext'
 
 const eventCategories = [
     {
@@ -89,24 +39,260 @@ const eventCategories = [
 ]
 
 export default function Events() {
+    const navigate = useNavigate()
+    const { user } = useAuth()
+
+    const [events, setEvents] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState('')
+
+    const [registeredEvents, setRegisteredEvents] =
+        useState([])
+
+    const [registrationLoading, setRegistrationLoading] =
+        useState({})
+
+    const [registrationMessage, setRegistrationMessage] =
+        useState('')
+
+    const [registrationError, setRegistrationError] =
+        useState('')
+
+    /* =========================
+       FETCH EVENTS
+    ========================= */
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                setLoading(true)
+                setError('')
+
+                const data = await getEvents()
+
+                if (data.success) {
+                    setEvents(data.events || [])
+                } else {
+                    setError(
+                        data.message ||
+                        'Failed to load events'
+                    )
+                }
+            } catch (error) {
+                console.error(
+                    'Failed to fetch events:',
+                    error
+                )
+
+                setError(
+                    error.response?.data?.message ||
+                    'Failed to load events'
+                )
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        fetchEvents()
+    }, [])
+
+    /* =========================
+       FETCH USER REGISTRATIONS
+    ========================= */
+
+    useEffect(() => {
+        const fetchMyRegistrations = async () => {
+            if (!user) {
+                setRegisteredEvents([])
+                return
+            }
+
+            try {
+                const data = await getMyRegistrations()
+
+                if (data.success) {
+                    setRegisteredEvents(
+                        data.registrations || []
+                    )
+                }
+            } catch (error) {
+                console.error(
+                    'Failed to fetch registrations:',
+                    error
+                )
+            }
+        }
+
+        fetchMyRegistrations()
+    }, [user])
+
+    /* =========================
+       CHECK REGISTRATION
+    ========================= */
+
+    const isRegistered = (eventId) => {
+        return registeredEvents.some(
+            (registration) => {
+                const registeredEventId =
+                    registration.eventId?._id ||
+                    registration.eventId ||
+                    registration.event?._id ||
+                    registration.event
+
+                return (
+                    String(registeredEventId) ===
+                    String(eventId)
+                )
+            }
+        )
+    }
+
+    /* =========================
+       REGISTER
+    ========================= */
+
+    const handleRegister = async (eventId) => {
+        setRegistrationMessage('')
+        setRegistrationError('')
+
+        if (!user) {
+            navigate('/login')
+            return
+        }
+
+        if (isRegistered(eventId)) {
+            setRegistrationMessage(
+                'You are already registered for this event.'
+            )
+            return
+        }
+
+        try {
+            setRegistrationLoading((prev) => ({
+                ...prev,
+                [eventId]: true,
+            }))
+
+            const data =
+                await registerForEvent(eventId)
+
+            if (data.success) {
+                setRegisteredEvents((prev) => [
+                    ...prev,
+                    data.registration || {
+                        eventId,
+                    },
+                ])
+
+                setRegistrationMessage(
+                    data.message ||
+                    'Successfully registered for the event.'
+                )
+            } else {
+                setRegistrationError(
+                    data.message ||
+                    'Unable to register for this event.'
+                )
+            }
+        } catch (error) {
+            console.error(
+                'Event registration error:',
+                error
+            )
+
+            setRegistrationError(
+                error.response?.data?.message ||
+                'Unable to register for this event.'
+            )
+        } finally {
+            setRegistrationLoading((prev) => ({
+                ...prev,
+                [eventId]: false,
+            }))
+        }
+    }
+
+    /* =========================
+       CANCEL REGISTRATION
+    ========================= */
+
+    const handleCancelRegistration = async (
+        eventId
+    ) => {
+        setRegistrationMessage('')
+        setRegistrationError('')
+
+        try {
+            setRegistrationLoading((prev) => ({
+                ...prev,
+                [eventId]: true,
+            }))
+
+            const data =
+                await cancelEventRegistration(eventId)
+
+            if (data.success) {
+                setRegisteredEvents((prev) =>
+                    prev.filter((registration) => {
+                        const registeredEventId =
+                            registration.eventId?._id ||
+                            registration.eventId ||
+                            registration.event?._id ||
+                            registration.event
+
+                        return (
+                            String(registeredEventId) !==
+                            String(eventId)
+                        )
+                    })
+                )
+
+                setRegistrationMessage(
+                    data.message ||
+                    'Registration cancelled successfully.'
+                )
+            } else {
+                setRegistrationError(
+                    data.message ||
+                    'Unable to cancel registration.'
+                )
+            }
+        } catch (error) {
+            console.error(
+                'Cancel registration error:',
+                error
+            )
+
+            setRegistrationError(
+                error.response?.data?.message ||
+                'Unable to cancel registration.'
+            )
+        } finally {
+            setRegistrationLoading((prev) => ({
+                ...prev,
+                [eventId]: false,
+            }))
+        }
+    }
+
     return (
         <>
             <SEO
                 title="Events"
-                description="Explore workshops, hackathons, coding competitions, seminars, and other technical events organized by Amity Tech Society."
+                description="Explore workshops, hackathons, coding competitions, seminars, and other technical events organized by ORBIT."
             />
-
 
             <main className="overflow-hidden bg-[#f5f3ee]">
 
                 {/* HERO */}
                 <section className="bg-black px-5 py-24 text-white md:px-10 md:py-32 lg:px-16">
                     <ParticleField count={40} />
+
                     <div className="mx-auto max-w-[1440px]">
 
                         <div className="mb-16 flex items-center justify-between border-b border-white/20 pb-4">
                             <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-orange-400">
-                                ATS Events
+                                ORBIT Events
                             </span>
 
                             <span className="font-mono text-[10px] text-neutral-500">
@@ -129,6 +315,7 @@ export default function Events() {
                         </h1>
 
                         <div className="mt-16 flex flex-col justify-between gap-8 border-t border-white/20 pt-8 md:flex-row md:items-end">
+
                             <p className="max-w-xl text-lg leading-8 text-neutral-400">
                                 Workshops, hackathons, competitions and
                                 conversations designed to turn curiosity into
@@ -138,18 +325,20 @@ export default function Events() {
                             <span className="font-mono text-xs text-neutral-500">
                                 2026 / 2027
                             </span>
-                        </div>
 
+                        </div>
                     </div>
                 </section>
 
                 {/* UPCOMING EVENTS */}
                 <section className="px-5 py-24 md:px-10 md:py-32 lg:px-16">
+
                     <div className="mx-auto max-w-[1440px]">
 
                         <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
 
                             <div>
+
                                 <p className="mb-4 text-xs font-bold uppercase tracking-[0.25em] text-orange-600">
                                     02 / Coming up
                                 </p>
@@ -159,6 +348,7 @@ export default function Events() {
                                     <br />
                                     events.
                                 </h2>
+
                             </div>
 
                             <p className="max-w-md text-sm leading-6 text-neutral-600">
@@ -168,111 +358,277 @@ export default function Events() {
 
                         </div>
 
-                        <div className="mt-16 space-y-8">
+                        {/* REGISTRATION MESSAGE */}
 
-                            {upcomingEvents.map((event) => (
-                                <article
-                                    key={event.number}
-                                    className={`group border-2 border-black bg-white shadow-[8px_8px_0px_#000] transition-all duration-300 hover:-translate-y-1 hover:shadow-[12px_12px_0px_#000] ${event.featured
-                                        ? 'p-6 md:p-10'
-                                        : 'p-6 md:p-8'
-                                        }`}
-                                >
-                                    <div className="grid gap-8 lg:grid-cols-[100px_1fr_300px]">
+                        {registrationMessage && (
+                            <div className="mt-10 border-2 border-black bg-[#d9ccff] p-5">
+                                <p className="text-xs font-bold uppercase tracking-[0.15em]">
+                                    {registrationMessage}
+                                </p>
+                            </div>
+                        )}
 
-                                        {/* NUMBER + TYPE */}
-                                        <div className="flex items-start justify-between lg:block">
+                        {/* REGISTRATION ERROR */}
 
-                                            <span className="font-mono text-sm font-bold">
-                                                {event.number}
-                                            </span>
+                        {registrationError && (
+                            <div className="mt-4 border-2 border-black bg-orange-500 p-5">
+                                <p className="text-xs font-bold uppercase tracking-[0.15em]">
+                                    {registrationError}
+                                </p>
+                            </div>
+                        )}
 
-                                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600 lg:mt-6 lg:block">
-                                                {event.type}
-                                            </span>
+                        {/* LOADING */}
 
-                                        </div>
+                        {loading && (
+                            <div className="mt-16 border-2 border-black bg-white p-10 shadow-[8px_8px_0px_#000]">
+                                <p className="text-sm font-bold uppercase tracking-wider">
+                                    Loading events...
+                                </p>
+                            </div>
+                        )}
 
-                                        {/* CONTENT */}
-                                        <div>
+                        {/* ERROR */}
 
-                                            <h3
-                                                className={`font-black uppercase leading-[0.9] tracking-tight ${event.featured
-                                                    ? 'text-4xl md:text-6xl'
-                                                    : 'text-3xl md:text-5xl'
+                        {!loading && error && (
+                            <div className="mt-16 border-2 border-black bg-orange-500 p-10 shadow-[8px_8px_0px_#000]">
+                                <p className="text-sm font-bold uppercase tracking-wider">
+                                    {error}
+                                </p>
+                            </div>
+                        )}
+
+                        {/* EMPTY */}
+
+                        {!loading &&
+                            !error &&
+                            events.length === 0 && (
+                                <div className="mt-16 border-2 border-black bg-white p-10 shadow-[8px_8px_0px_#000]">
+                                    <p className="text-sm font-bold uppercase tracking-wider">
+                                        No upcoming events available.
+                                    </p>
+                                </div>
+                            )}
+
+                        {/* EVENTS */}
+
+                        {!loading &&
+                            !error &&
+                            events.length > 0 && (
+                                <div className="mt-16 space-y-8">
+
+                                    {events.map(
+                                        (event, index) => {
+                                            const registered =
+                                                isRegistered(
+                                                    event._id
+                                                )
+
+                                            const registering =
+                                                registrationLoading[
+                                                    event._id
+                                                ]
+
+                                            return (
+                                                <article
+                                                    key={
+                                                        event._id
+                                                    }
+                                                    className={`group border-2 border-black bg-white shadow-[8px_8px_0px_#000] transition-all duration-300 hover:-translate-y-1 hover:shadow-[12px_12px_0px_#000] ${
+                                                        index ===
+                                                        0
+                                                            ? 'p-6 md:p-10'
+                                                            : 'p-6 md:p-8'
                                                     }`}
-                                            >
-                                                {event.title}
-                                            </h3>
-
-                                            <p className="mt-6 max-w-2xl text-sm leading-7 text-neutral-600 md:text-base">
-                                                {event.description}
-                                            </p>
-
-                                            <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4 border-t border-neutral-200 pt-6">
-
-                                                <div className="flex items-center gap-2 text-xs font-bold uppercase">
-                                                    <CalendarDays size={15} />
-                                                    {event.date}
-                                                </div>
-
-                                                <div className="flex items-center gap-2 text-xs font-bold uppercase">
-                                                    <MapPin size={15} />
-                                                    {event.venue}
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-
-                                        {/* META */}
-                                        <div className="flex flex-col justify-between border-t border-black pt-6 lg:border-l lg:border-t-0 lg:pl-8">
-
-                                            <div>
-
-                                                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500">
-                                                    Event time
-                                                </p>
-
-                                                <p className="mt-2 font-mono text-sm font-bold">
-                                                    {event.time}
-                                                </p>
-
-                                                <p className="mt-6 flex items-center gap-2 text-xs font-bold uppercase">
-                                                    <Users size={15} />
-                                                    {event.seats}
-                                                </p>
-
-                                            </div>
-
-                                            <Link
-                                                to="/contact">
-
-                                                <p
-                                                    className="mt-8 flex w-full items-center justify-between bg-black px-5 py-4 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-orange-600"
                                                 >
-                                                    Register now
 
-                                                    <ArrowUpRight
-                                                        size={16}
-                                                        className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-                                                    />
-                                                </p>
-                                            </Link>
+                                                    <div className="grid gap-8 lg:grid-cols-[100px_1fr_300px]">
 
-                                        </div>
+                                                        {/* NUMBER + TYPE */}
 
-                                    </div>
-                                </article>
-                            ))}
+                                                        <div className="flex items-start justify-between lg:block">
 
-                        </div>
+                                                            <span className="font-mono text-sm font-bold">
+                                                                {String(
+                                                                    index +
+                                                                    1
+                                                                ).padStart(
+                                                                    2,
+                                                                    '0'
+                                                                )}
+                                                            </span>
+
+                                                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600 lg:mt-6 lg:block">
+                                                                {event.type ||
+                                                                    'EVENT'}
+                                                            </span>
+
+                                                        </div>
+
+                                                        {/* CONTENT */}
+
+                                                        <div>
+
+                                                            <h3
+                                                                className={`font-black uppercase leading-[0.9] tracking-tight ${
+                                                                    index ===
+                                                                    0
+                                                                        ? 'text-4xl md:text-6xl'
+                                                                        : 'text-3xl md:text-5xl'
+                                                                }`}
+                                                            >
+                                                                {
+                                                                    event.title
+                                                                }
+                                                            </h3>
+
+                                                            <p className="mt-6 max-w-2xl text-sm leading-7 text-neutral-600 md:text-base">
+                                                                {event.description ||
+                                                                    'Join the ORBIT community for this exciting technical event.'}
+                                                            </p>
+
+                                                            <div className="mt-8 flex flex-wrap gap-x-8 gap-y-4 border-t border-neutral-200 pt-6">
+
+                                                                <div className="flex items-center gap-2 text-xs font-bold uppercase">
+                                                                    <CalendarDays
+                                                                        size={
+                                                                            15
+                                                                        }
+                                                                    />
+
+                                                                    {event.date
+                                                                        ? new Date(
+                                                                              event.date
+                                                                          ).toLocaleDateString(
+                                                                              'en-IN',
+                                                                              {
+                                                                                  day: '2-digit',
+                                                                                  month: 'short',
+                                                                                  year: 'numeric',
+                                                                              }
+                                                                          )
+                                                                        : 'DATE TBA'}
+                                                                </div>
+
+                                                                <div className="flex items-center gap-2 text-xs font-bold uppercase">
+                                                                    <MapPin
+                                                                        size={
+                                                                            15
+                                                                        }
+                                                                    />
+
+                                                                    {event.venue ||
+                                                                        'VENUE TBA'}
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                        {/* META */}
+
+                                                        <div className="flex flex-col justify-between border-t border-black pt-6 lg:border-l lg:border-t-0 lg:pl-8">
+
+                                                            <div>
+
+                                                                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500">
+                                                                    Event time
+                                                                </p>
+
+                                                                <p className="mt-2 font-mono text-sm font-bold">
+                                                                    {event.time ||
+                                                                        'TIME TBA'}
+                                                                </p>
+
+                                                                <p className="mt-6 flex items-center gap-2 text-xs font-bold uppercase">
+                                                                    <Users
+                                                                        size={
+                                                                            15
+                                                                        }
+                                                                    />
+
+                                                                    {event.seats ||
+                                                                        'LIMITED SEATS'}
+                                                                </p>
+
+                                                            </div>
+
+                                                            {/* REGISTRATION BUTTON */}
+
+                                                            {registered ? (
+                                                                <div className="mt-8 flex flex-col gap-2">
+
+                                                                    <button
+                                                                        onClick={() =>
+                                                                            handleCancelRegistration(
+                                                                                event._id
+                                                                            )
+                                                                        }
+                                                                        disabled={
+                                                                            registering
+                                                                        }
+                                                                        className="flex w-full items-center justify-between bg-[#d9ccff] px-5 py-4 text-xs font-bold uppercase tracking-wider text-black transition hover:bg-orange-500 disabled:cursor-not-allowed disabled:opacity-50"
+                                                                    >
+                                                                        {registering
+                                                                            ? 'Cancelling...'
+                                                                            : 'Registered'}
+
+                                                                        <span>
+                                                                            ✓
+                                                                        </span>
+                                                                    </button>
+
+                                                                    <span className="text-center text-[9px] font-bold uppercase tracking-[0.15em] text-neutral-500">
+                                                                        Click to cancel
+                                                                    </span>
+
+                                                                </div>
+                                                            ) : (
+                                                                <button
+                                                                    onClick={() =>
+                                                                        handleRegister(
+                                                                            event._id
+                                                                        )
+                                                                    }
+                                                                    disabled={
+                                                                        registering
+                                                                    }
+                                                                    className="group mt-8 flex w-full items-center justify-between bg-black px-5 py-4 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
+                                                                >
+
+                                                                    {registering
+                                                                        ? 'Registering...'
+                                                                        : 'Register now'}
+
+                                                                    <ArrowUpRight
+                                                                        size={
+                                                                            16
+                                                                        }
+                                                                        className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                                                                    />
+
+                                                                </button>
+                                                            )}
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </article>
+                                            )
+                                        }
+                                    )}
+
+                                </div>
+                            )}
 
                     </div>
                 </section>
 
                 {/* EVENT CATEGORIES */}
+
                 <section className="bg-[#d9ccff] px-5 py-24 md:px-10 md:py-32 lg:px-16">
+
                     <div className="mx-auto max-w-[1440px]">
 
                         <div className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr]">
@@ -293,26 +649,36 @@ export default function Events() {
 
                             <div className="grid border-l border-t border-black sm:grid-cols-2">
 
-                                {eventCategories.map((category, index) => (
-                                    <div
-                                        key={category.title}
-                                        className="border-b border-r border-black p-7 md:p-9"
-                                    >
+                                {eventCategories.map(
+                                    (category, index) => (
+                                        <div
+                                            key={
+                                                category.title
+                                            }
+                                            className="border-b border-r border-black p-7 md:p-9"
+                                        >
 
-                                        <span className="font-mono text-xs">
-                                            0{index + 1}
-                                        </span>
+                                            <span className="font-mono text-xs">
+                                                0
+                                                {index +
+                                                    1}
+                                            </span>
 
-                                        <h3 className="mt-14 text-2xl font-black uppercase">
-                                            {category.title}
-                                        </h3>
+                                            <h3 className="mt-14 text-2xl font-black uppercase">
+                                                {
+                                                    category.title
+                                                }
+                                            </h3>
 
-                                        <p className="mt-4 text-sm leading-6 text-neutral-700">
-                                            {category.text}
-                                        </p>
+                                            <p className="mt-4 text-sm leading-6 text-neutral-700">
+                                                {
+                                                    category.text
+                                                }
+                                            </p>
 
-                                    </div>
-                                ))}
+                                        </div>
+                                    )
+                                )}
 
                             </div>
 
@@ -322,7 +688,9 @@ export default function Events() {
                 </section>
 
                 {/* PAST EVENTS */}
+
                 <section className="bg-white px-5 py-24 md:px-10 md:py-32 lg:px-16">
+
                     <div className="mx-auto max-w-[1440px]">
 
                         <div className="flex items-end justify-between border-b-2 border-black pb-6">
@@ -340,37 +708,16 @@ export default function Events() {
                             </div>
 
                             <span className="hidden font-mono text-xs text-neutral-500 md:block">
-                                ATS / ARCHIVE
+                                ORBIT / ARCHIVE
                             </span>
 
                         </div>
 
-                        <div>
+                        <div className="py-10">
 
-                            {pastEvents.map((event) => (
-                                <div
-                                    key={event.number}
-                                    className="group grid gap-4 border-b border-black py-7 transition-all duration-300 md:grid-cols-[80px_1fr_160px_180px] md:items-center md:px-3 md:hover:bg-[#f5f3ee]"
-                                >
-
-                                    <span className="font-mono text-xs">
-                                        {event.number}
-                                    </span>
-
-                                    <h3 className="text-2xl font-black uppercase md:text-3xl">
-                                        {event.title}
-                                    </h3>
-
-                                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">
-                                        {event.type}
-                                    </span>
-
-                                    <span className="font-mono text-xs font-bold md:text-right">
-                                        {event.date}
-                                    </span>
-
-                                </div>
-                            ))}
+                            <p className="text-sm font-bold uppercase tracking-wider text-neutral-500">
+                                Past event archive will appear here.
+                            </p>
 
                         </div>
 
@@ -378,7 +725,9 @@ export default function Events() {
                 </section>
 
                 {/* CTA */}
+
                 <section className="bg-orange-500 px-5 py-24 md:px-10 md:py-32 lg:px-16">
+
                     <div className="mx-auto max-w-[1440px]">
 
                         <p className="text-xs font-bold uppercase tracking-[0.25em]">
@@ -393,18 +742,19 @@ export default function Events() {
                                 it happen.
                             </h2>
 
-                            <Link
-                                to="/contact">
-                                <p
-                                    className="group flex w-fit items-center gap-3 bg-black px-7 py-4 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-white hover:text-black"
-                                >
-                                    Talk to ATS
+                            <Link to="/contact">
+
+                                <p className="group flex w-fit items-center gap-3 bg-black px-7 py-4 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-white hover:text-black">
+
+                                    Talk to ORBIT
 
                                     <ArrowUpRight
                                         size={18}
                                         className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
                                     />
+
                                 </p>
+
                             </Link>
 
                         </div>

@@ -5,24 +5,26 @@ const { isValidUrl } = require('../utils/validation')
 // CREATE - ADMIN
 const createGalleryItem = async (req, res) => {
     try {
+        const { mediaUrl, thumbnailUrl } = req.body
+
         if (
-            !isValidUrl(req.body.mediaUrl) ||
-            !isValidUrl(req.body.thumbnailUrl)
+            !mediaUrl ||
+            !isValidUrl(mediaUrl) ||
+            (thumbnailUrl && !isValidUrl(thumbnailUrl))
         ) {
             return res.status(400).json({
                 success: false,
                 message: 'Please provide valid HTTP or HTTPS URLs'
             })
         }
-        const item =
-            await GalleryModel.create(req.body)
+
+        const item = await GalleryModel.create(req.body)
 
         res.status(201).json({
             success: true,
             message: 'Gallery item created successfully',
             item
         })
-
     } catch (error) {
         res.status(500).json({
             success: false,
@@ -85,8 +87,10 @@ const updateGalleryItem = async (req, res) => {
     try {
         if (
             (req.body.mediaUrl !== undefined &&
+                req.body.mediaUrl &&
                 !isValidUrl(req.body.mediaUrl)) ||
             (req.body.thumbnailUrl !== undefined &&
+                req.body.thumbnailUrl &&
                 !isValidUrl(req.body.thumbnailUrl))
         ) {
             return res.status(400).json({

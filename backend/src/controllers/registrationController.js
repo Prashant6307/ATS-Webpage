@@ -132,6 +132,37 @@ const getEventRegistrations = async (req, res) => {
     }
 }
 
+// GET ALL REGISTRATIONS - ADMIN
+const getAllRegistrations = async (req, res) => {
+    try {
+        const registrations =
+            await RegistrationModel.find()
+                .populate(
+                    'eventId',
+                    'title type date venue status'
+                )
+                .populate(
+                    'userId',
+                    'firstName lastName email studentId department course year'
+                )
+                .sort({
+                    createdAt: -1
+                })
+
+        res.status(200).json({
+            success: true,
+            count: registrations.length,
+            registrations
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
 
 // CANCEL REGISTRATION
 const cancelRegistration = async (req, res) => {
@@ -181,7 +212,7 @@ const markAttendance = async (req, res) => {
                 registrationId,
                 { attendance },
                 {
-                    new: true,
+                    returnDocument: 'after',
                     runValidators: true
                 }
             )
@@ -346,6 +377,7 @@ module.exports = {
     registerForEvent,
     getMyRegistrations,
     getEventRegistrations,
+    getAllRegistrations,
     cancelRegistration,
     markAttendance,
     issueCertificate,

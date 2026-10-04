@@ -1,3 +1,5 @@
+import logo from '../assets/logo.jpeg'
+
 export default function TechSketch() {
     return (
         <div className="relative h-[360px] w-full max-w-[520px]">
@@ -14,13 +16,11 @@ export default function TechSketch() {
             <div className="absolute left-1/2 top-1/2 flex h-28 w-28 -translate-x-1/2 -translate-y-1/2 rotate-3 items-center justify-center border-2 border-orange-500 bg-black shadow-[10px_10px_0px_#f97316]">
 
                 <div className="text-center">
-                    <span className="block text-3xl font-black tracking-[-0.08em]">
-                        ATS
-                    </span>
-
-                    <span className="mt-1 block text-[7px] font-bold uppercase tracking-[0.3em] text-orange-400">
-                        Tech Society
-                    </span>
+                    <img
+                        src={logo}
+                        alt="Official club logo"
+                        className=" w-auto object-contain border"
+                    />
                 </div>
             </div>
 

@@ -7,12 +7,15 @@ const { isValidUrl } = require('../utils/validation')
 const createProject = async (req, res) => {
     try {
         if (
-            !isValidUrl(req.body.githubUrl) ||
-            !isValidUrl(req.body.demoUrl)
+            (req.body.githubUrl &&
+                !isValidUrl(req.body.githubUrl)) ||
+            (req.body.demoUrl &&
+                !isValidUrl(req.body.demoUrl))
         ) {
             return res.status(400).json({
                 success: false,
-                message: 'Please provide valid HTTP or HTTPS URLs'
+                message:
+                    'Please provide valid HTTP or HTTPS URLs'
             })
         }
         const project =
@@ -200,12 +203,15 @@ const updateProject = async (req, res) => {
     try {
 
         if (
-            !isValidUrl(req.body.githubUrl) ||
-            !isValidUrl(req.body.demoUrl)
+            (req.body.githubUrl &&
+                !isValidUrl(req.body.githubUrl)) ||
+            (req.body.demoUrl &&
+                !isValidUrl(req.body.demoUrl))
         ) {
             return res.status(400).json({
                 success: false,
-                message: 'Please provide valid HTTP or HTTPS URLs'
+                message:
+                    'Please provide valid HTTP or HTTPS URLs'
             })
         }
         const project =

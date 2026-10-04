@@ -7,7 +7,7 @@ export default function NotFound() {
         <>
             <SEO
                 title="Page Not Found"
-                description="The requested page could not be found on the Amity Tech Society website."
+                description="The requested page could not be found on the ORBIT website."
             />
 
             <main className="bg-black text-white">
@@ -29,21 +29,23 @@ export default function NotFound() {
 
                                 <p className="mt-4 max-w-xl text-sm leading-7 text-neutral-400">
                                     Looks like this route went somewhere else.
-                                    Let&apos;s get you back to ATS.
+                                    Let&apos;s get you back to ORBIT.
                                 </p>
                             </div>
 
                             <Link
-                                to="/"
+                                to="/">
+                                    <p
                                 className="group flex w-fit items-center gap-4 bg-orange-500 px-6 py-4 text-xs font-bold uppercase tracking-[0.15em] text-black transition-colors hover:bg-white"
                             >
-                                <ArrowLeft size={16} />
+                                
                                 Back home
 
                                 <ArrowUpRight
                                     size={16}
                                     className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
                                 />
+                                </p>
                             </Link>
                         </div>
                     </div>

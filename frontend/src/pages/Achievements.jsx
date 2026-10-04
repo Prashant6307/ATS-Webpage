@@ -10,7 +10,7 @@ const achievements = [
         category: 'HACKATHON',
         title: 'National Innovation Hackathon',
         description:
-            'ATS student team developed an AI-powered solution for a real-world problem and presented the project at the national level.',
+            'ORBIT student team developed an AI-powered solution for a real-world problem and presented the project at the national level.',
         result: 'FINALIST',
         icon: Trophy,
     },
@@ -20,7 +20,7 @@ const achievements = [
         category: 'COMPETITION',
         title: 'Inter-College Coding Challenge',
         description:
-            'Students from ATS participated in a competitive programming challenge involving algorithms, problem solving and coding.',
+            'Students from ORBIT participated in a competitive programming challenge involving algorithms, problem solving and coding.',
         result: 'TOP 10',
         icon: Medal,
     },
@@ -40,7 +40,7 @@ const achievements = [
         category: 'CERTIFICATION',
         title: 'Cloud & Development Certifications',
         description:
-            'ATS members completed industry-oriented certifications across cloud computing, web development and programming.',
+            'ORBIT members completed industry-oriented certifications across cloud computing, web development and programming.',
         result: 'CERTIFIED',
         icon: Award,
     },
@@ -60,7 +60,7 @@ const achievements = [
         category: 'COMMUNITY',
         title: 'Technical Community Launch',
         description:
-            'ATS launched its student-led technical community to create a platform for learning, collaboration and experimentation.',
+            'ORBIT launched its student-led technical community to create a platform for learning, collaboration and experimentation.',
         result: 'EST. 2025',
         icon: Medal,
     },
@@ -78,7 +78,7 @@ export default function Achievements() {
         <>
             <SEO
                 title="Achievements"
-                description="Explore the achievements, competition wins, hackathon performances, certifications, and accomplishments of Amity Tech Society members."
+                description="Explore the achievements, competition wins, hackathon performances, certifications, and accomplishments of ORBIT members."
             />
             <main>
                 {/* HERO */}
@@ -103,7 +103,7 @@ export default function Achievements() {
                             </span>
 
                             <span className="font-mono text-[10px] text-neutral-500">
-                                ATS / 2026
+                                ORBIT / 2026
                             </span>
                         </div>
 
@@ -122,7 +122,7 @@ export default function Achievements() {
 
                             <p className="max-w-md text-sm leading-7 text-neutral-400 md:text-base">
                                 From hackathons and competitions to projects and
-                                certifications, this is a record of what the ATS
+                                certifications, this is a record of what the ORBIT
                                 community has built and accomplished.
                             </p>
                         </div>
@@ -175,7 +175,7 @@ export default function Achievements() {
 
                             <p className="max-w-sm text-sm leading-6 text-neutral-600">
                                 A growing archive of competitions, projects,
-                                certifications and moments from the ATS community.
+                                certifications and moments from the ORBIT community.
                             </p>
                         </div>
 
@@ -274,7 +274,7 @@ export default function Achievements() {
                             </span>
 
                             <span className="font-mono text-[10px]">
-                                ATS / BUILD
+                                ORBIT / BUILD
                             </span>
                         </div>
 
@@ -298,7 +298,7 @@ export default function Achievements() {
                                     <p
                                         className="group mt-8 flex w-fit items-center gap-8 bg-black px-6 py-5 text-xs font-bold uppercase tracking-[0.15em] text-white transition-all duration-300 hover:bg-white hover:text-black"
                                     >
-                                        Join ATS
+                                        Join ORBIT
 
                                         <ArrowUpRight
                                             size={18}

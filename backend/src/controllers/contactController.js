@@ -1,6 +1,6 @@
 const ContactModel =
     require('../models/Contact')
-
+const validator = require('validator')
 
 // SEND CONTACT MESSAGE - PUBLIC
 const createContact = async (req, res) => {
@@ -11,6 +11,13 @@ const createContact = async (req, res) => {
             subject,
             message
         } = req.body
+
+        if (!validator.isEmail(email)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please provide a valid email address'
+            })
+        }
 
         if (!name || !email || !subject || !message) {
             return res.status(400).json({
@@ -81,7 +88,7 @@ const updateContactStatus = async (req, res) => {
                 req.params.id,
                 { status },
                 {
-                    new: true,
+                    returnDocument: 'after',
                     runValidators: true
                 }
             )

@@ -40,6 +40,50 @@ const getAllUsers = async (req, res) => {
     }
 }
 
+const updateProfile = async (req, res) => {
+    try {
+        const allowedFields = [
+            'firstName',
+            'lastName',
+            'studentId',
+            'department',
+            'course',
+            'year',
+            'profileImage',
+            'github',
+            'linkedin'
+        ]
+
+        const updates = {}
+
+        allowedFields.forEach((field) => {
+            if (req.body[field] !== undefined) {
+                updates[field] = req.body[field]
+            }
+        })
+
+        const user = await UserModel.findByIdAndUpdate(
+            req.user._id,
+            updates,
+            {
+                returnDocument: 'after',
+                runValidators: true
+            }
+        ).select('-password')
+
+        res.status(200).json({
+            success: true,
+            message: 'Profile updated successfully',
+            user
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
 
 // CHANGE USER ROLE - ADMIN
 const updateUserRole = async (req, res) => {
@@ -151,6 +195,7 @@ const deleteUser = async (req, res) => {
 
 module.exports = {
     getProfile,
+    updateProfile,
     getAllUsers,
     updateUserRole,
     deleteUser

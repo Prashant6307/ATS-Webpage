@@ -1,4 +1,7 @@
+
 import { useEffect } from 'react'
+
+const SITE_NAME = 'ORBIT'
 
 export default function SEO({
     title,
@@ -6,8 +9,8 @@ export default function SEO({
 }) {
     useEffect(() => {
         document.title = title
-            ? `${title} — ATS`
-            : 'ATS — Amity Tech Society'
+            ? `${title} — ${SITE_NAME}`
+            : SITE_NAME
 
         const metaDescription = document.querySelector(
             'meta[name="description"]',

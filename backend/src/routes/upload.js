@@ -1,28 +1,45 @@
 const express = require('express')
 
+const { userAuth } =
+    require('../middleware/userAuth')
+
+const { adminAuth } =
+    require('../middleware/adminAuth')
+
 const upload =
     require('../middleware/upload')
 
 const {
-    uploadImage
+    uploadProfileImage,
+    uploadGalleryImage
 } = require('../controllers/uploadController')
-
-const {
-    userAuth
-} = require('../middleware/userAuth')
-
-const {
-    adminAuth
-} = require('../middleware/adminAuth')
 
 const router = express.Router()
 
+
+// =====================================
+// Logged-in user profile image
+// =====================================
+
 router.post(
-    '/image',
+    '/profile-image',
+    userAuth,
+    upload.single('image'),
+    uploadProfileImage
+)
+
+
+// =====================================
+// Admin gallery image
+// =====================================
+
+router.post(
+    '/gallery-image',
     userAuth,
     adminAuth,
     upload.single('image'),
-    uploadImage
+    uploadGalleryImage
 )
+
 
 module.exports = router

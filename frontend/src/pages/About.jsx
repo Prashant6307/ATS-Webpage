@@ -65,7 +65,7 @@ export default function About() {
     <>
     <SEO
     title="About"
-    description="Learn about Amity Tech Society, our mission, technical domains, values, and student community."
+    description="Learn about ORBIT, our mission, technical domains, values, and student community."
 />
     <main className="overflow-hidden bg-[#f5f3ee]">
 
@@ -76,7 +76,7 @@ export default function About() {
 
           <div className="mb-16 flex items-center justify-between border-b border-white/20 pb-4">
             <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-orange-400">
-              About ATS
+              About ORBIT
             </span>
 
             <span className="font-mono text-[10px] text-neutral-500">
@@ -85,7 +85,7 @@ export default function About() {
           </div>
 
           <p className="mb-8 text-xs font-bold uppercase tracking-[0.3em] text-orange-400">
-            Amity Tech Society
+            ORBIT
           </p>
 
           <h1 className="max-w-[1200px] text-[clamp(4rem,10vw,10rem)] font-black uppercase leading-[0.78] tracking-[-0.07em]">
@@ -98,7 +98,7 @@ export default function About() {
 
           <div className="mt-16 flex flex-col justify-between gap-10 border-t border-white/20 pt-8 md:flex-row md:items-end">
             <p className="max-w-xl text-lg leading-8 text-neutral-400">
-              ATS is a student-led technical community built around curiosity,
+              ORBIT is a student-led technical community built around curiosity,
               experimentation and collaboration.
             </p>
 
@@ -133,7 +133,7 @@ export default function About() {
               </h2>
 
               <p className="mt-10 max-w-2xl text-base leading-8 text-neutral-600 md:text-lg">
-                Amity Tech Society brings together students who want to explore
+                ORBIT brings together students who want to explore
                 technology beyond the classroom. We create opportunities to
                 learn, experiment, build projects and collaborate with people
                 who share the same curiosity.
@@ -141,7 +141,7 @@ export default function About() {
 
               <p className="mt-6 max-w-2xl text-base leading-8 text-neutral-600 md:text-lg">
                 From workshops and hackathons to technical projects and
-                competitions, ATS is designed to turn learning into practical
+                competitions, ORBIT is designed to turn learning into practical
                 experience.
               </p>
 
@@ -165,7 +165,7 @@ export default function About() {
           <SectionHeading
             eyebrow="03 / Our playground"
             title="Explore. Learn. Build."
-            description="Technology is bigger than a single discipline. ATS gives students space to explore different directions."
+            description="Technology is bigger than a single discipline. ORBIT gives students space to explore different directions."
           />
 
           <div className="mt-16 grid border-l border-t border-black md:grid-cols-2 lg:grid-cols-3">
@@ -247,12 +247,12 @@ export default function About() {
             <SectionHeading
               eyebrow="04 / What we believe"
               title="How we build."
-              description="The principles that shape the ATS community."
+              description="The principles that shape the ORBIT community."
               light
             />
 
             <span className="font-mono text-xs text-neutral-500">
-              ATS / VALUES
+              ORBIT / VALUES
             </span>
           </div>
 
@@ -301,7 +301,7 @@ export default function About() {
               <p
                 className="group flex w-fit items-center gap-3 bg-black px-7 py-4 text-sm font-bold uppercase tracking-wider text-white transition hover:bg-white hover:text-black"
               >
-                Join ATS
+                Join ORBIT
                 <ArrowUpRight
                   size={18}
                   className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"

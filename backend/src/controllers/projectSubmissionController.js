@@ -1,6 +1,7 @@
 const ProjectSubmissionModel =
     require('../models/ProjectSubmission')
-
+const ProjectModel =
+    require('../models/Project')
 
 // STUDENT SUBMIT PROJECT
 const submitProject = async (req, res) => {
@@ -51,13 +52,17 @@ const getMySubmissions = async (req, res) => {
             await ProjectSubmissionModel.find({
                 submittedBy: req.user._id
             })
-            .populate(
-                'members',
-                'firstName lastName email'
-            )
-            .sort({
-                createdAt: -1
-            })
+                .populate(
+                    'members',
+                    'firstName lastName email'
+                )
+                .populate(
+                    'approvedProject',
+                    'title published'
+                )
+                .sort({
+                    createdAt: -1
+                })
 
         res.status(200).json({
             success: true,
@@ -72,7 +77,6 @@ const getMySubmissions = async (req, res) => {
         })
     }
 }
-
 
 // GET ALL SUBMISSIONS - ADMIN
 const getAllSubmissions = async (req, res) => {
@@ -107,6 +111,7 @@ const getAllSubmissions = async (req, res) => {
 
 
 // REVIEW SUBMISSION - ADMIN
+// REVIEW SUBMISSION - ADMIN
 const reviewSubmission = async (req, res) => {
     try {
         const { status, adminComment } = req.body
@@ -119,16 +124,8 @@ const reviewSubmission = async (req, res) => {
         }
 
         const submission =
-            await ProjectSubmissionModel.findByIdAndUpdate(
-                req.params.id,
-                {
-                    status,
-                    adminComment: adminComment || ''
-                },
-                {
-                    new: true,
-                    runValidators: true
-                }
+            await ProjectSubmissionModel.findById(
+                req.params.id
             )
 
         if (!submission) {
@@ -138,9 +135,60 @@ const reviewSubmission = async (req, res) => {
             })
         }
 
+        // APPROVE PROJECT
+        if (status === 'approved') {
+
+            // Prevent duplicate project creation
+            if (submission.approvedProject) {
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        'This submission has already been approved'
+                })
+            }
+
+            const project =
+                await ProjectModel.create({
+                    title: submission.title,
+                    description: submission.description,
+                    techStack: submission.techStack,
+                    category: submission.category,
+                    githubUrl: submission.githubUrl,
+                    demoUrl: submission.demoUrl,
+                    image: submission.image,
+                    members: submission.members,
+                    status: 'completed',
+                    featured: false,
+                    published: true
+                })
+
+            submission.status = 'approved'
+            submission.adminComment =
+                adminComment || ''
+            submission.approvedProject =
+                project._id
+
+            await submission.save()
+
+            return res.status(200).json({
+                success: true,
+                message:
+                    'Project approved and published successfully',
+                submission,
+                project
+            })
+        }
+
+        // REJECT PROJECT
+        submission.status = 'rejected'
+        submission.adminComment =
+            adminComment || ''
+
+        await submission.save()
+
         res.status(200).json({
             success: true,
-            message: `Project ${status} successfully`,
+            message: 'Project rejected successfully',
             submission
         })
 

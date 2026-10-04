@@ -5,10 +5,12 @@ const { isValidUrl } = require('../utils/validation')
 // CREATE TEAM MEMBER - ADMIN
 const createTeamMember = async (req, res) => {
     try {
+        const { image, github, linkedin } = req.body
+
         if (
-            !isValidUrl(req.body.image) ||
-            !isValidUrl(req.body.github) ||
-            !isValidUrl(req.body.linkedin)
+            (image && !isValidUrl(image)) ||
+            (github && !isValidUrl(github)) ||
+            (linkedin && !isValidUrl(linkedin))
         ) {
             return res.status(400).json({
                 success: false,

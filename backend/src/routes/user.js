@@ -5,19 +5,34 @@ const { adminAuth } = require('../middleware/adminAuth')
 
 const {
     getProfile,
+    updateProfile,
     getAllUsers,
     updateUserRole,
-    deleteUser
+    deleteUser,
 } = require('../controllers/userController')
 
 const router = express.Router()
 
+// ==============================
+// USER
+// ==============================
 
-// Logged-in user
-router.get('/profile', userAuth, getProfile)
+router.get(
+    '/profile',
+    userAuth,
+    getProfile
+)
 
+router.patch(
+    '/profile',
+    userAuth,
+    updateProfile
+)
 
-// Admin
+// ==============================
+// ADMIN
+// ==============================
+
 router.get(
     '/all',
     userAuth,
@@ -38,6 +53,5 @@ router.delete(
     adminAuth,
     deleteUser
 )
-
 
 module.exports = router

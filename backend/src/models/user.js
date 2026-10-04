@@ -55,7 +55,9 @@ const userSchema = new mongoose.Schema(
             default: 'student'
         },
 
-        profileImage: {
+        profileImage: { type: String, default: '' },
+
+        profileImagePublicId: {
             type: String,
             default: ''
         },

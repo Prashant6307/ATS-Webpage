@@ -15,7 +15,7 @@ export default function LoadingState({
                     </p>
 
                     <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.15em] text-neutral-400">
-                        ATS / Please wait
+                        ORBIT / Please wait
                     </p>
                 </div>
             </div>

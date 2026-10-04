@@ -1,5 +1,6 @@
 import { ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import logo from '../assets/logo1.png'
 
 const navigation = [
     { name: 'About', path: '/about' },
@@ -18,14 +19,18 @@ export default function Footer() {
                     {/* Brand */}
                     <div>
                         <div className="flex items-center gap-3">
-                            <div className="flex h-12 w-12 items-center justify-center bg-orange-500 text-xl font-black">
-                                A.
+                            <div className="flex h-12 w-12 items-center justify-center  text-xl font-black">
+                                <img
+                                                        src={logo}
+                                                        alt="Official club logo"
+                                                        className="h-10 w-auto object-contain border" 
+                                                    />
                             </div>
 
                             <div>
-                                <p className="text-xl font-black">ATS.</p>
+                                <p className="text-xl font-black">ORBIT.</p>
                                 <p className="text-[9px] tracking-[0.25em] text-neutral-500">
-                                    AMITY TECH SOCIETY
+                                    ORBIT
                                 </p>
                             </div>
                         </div>
@@ -96,7 +101,7 @@ export default function Footer() {
                 </div>
 
                 <div className="flex flex-col justify-between gap-4 pt-6 text-[10px] uppercase tracking-[0.2em] text-neutral-600 md:flex-row">
-                    <p>© 2026 Amity Tech Society</p>
+                    <p>© 2026 ORBIT</p>
                     <p>Built by students · For students</p>
                 </div>
             </div>

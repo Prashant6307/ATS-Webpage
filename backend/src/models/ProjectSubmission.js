@@ -74,6 +74,11 @@ const projectSubmissionSchema = new mongoose.Schema(
         adminComment: {
             type: String,
             default: ''
+        },
+        approvedProject: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Project',
+            default: null
         }
     },
     {

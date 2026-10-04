@@ -4,6 +4,7 @@ const {
     registerForEvent,
     getMyRegistrations,
     getEventRegistrations,
+    getAllRegistrations,
     cancelRegistration,
     markAttendance,
     issueCertificate,
@@ -31,6 +32,13 @@ router.get(
     userAuth,
     adminAuth,
     getEventRegistrations
+)
+
+router.get(
+    '/admin/all',
+    userAuth,
+    adminAuth,
+    getAllRegistrations
 )
 
 router.patch(
